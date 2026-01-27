@@ -165,34 +165,57 @@ hackathon-todo/
 
 ## Database Schema
 
+### Users Table
+| Field | Type | Constraints |
+|-------|------|-------------|
+| id | UUID | PRIMARY KEY |
+| email | string | UNIQUE, NOT NULL, max 255 chars |
+| hashed_password | string | NOT NULL, max 255 chars |
+| created_at | timestamp | AUTO |
+| updated_at | timestamp | AUTO |
+
 ### Tasks Table
 | Field | Type | Constraints |
 |-------|------|-------------|
-| id | integer | PRIMARY KEY |
-| user_id | string | FOREIGN KEY → users.id |
+| id | UUID | PRIMARY KEY |
+| user_id | UUID | FOREIGN KEY → users.id |
 | title | string | NOT NULL, 1-200 chars |
 | description | text | NULLABLE, max 1000 chars |
-| completed | boolean | DEFAULT false |
+| is_complete | boolean | DEFAULT false |
 | created_at | timestamp | AUTO |
 | updated_at | timestamp | AUTO |
 
 ### Conversation Table (Phase III+)
 | Field | Type | Constraints |
 |-------|------|-------------|
-| id | integer | PRIMARY KEY |
-| user_id | string | FOREIGN KEY |
+| id | UUID | PRIMARY KEY |
+| user_id | UUID | FOREIGN KEY |
 | created_at | timestamp | AUTO |
 | updated_at | timestamp | AUTO |
 
 ### Message Table (Phase III+)
 | Field | Type | Constraints |
 |-------|------|-------------|
-| id | integer | PRIMARY KEY |
-| conversation_id | integer | FOREIGN KEY |
-| user_id | string | FOREIGN KEY |
+| id | UUID | PRIMARY KEY |
+| conversation_id | UUID | FOREIGN KEY |
+| user_id | UUID | FOREIGN KEY |
 | role | enum | 'user' or 'assistant' |
 | content | text | NOT NULL |
 | created_at | timestamp | AUTO |
+
+### Schema Design Rationale
+
+**UUID Primary Keys** (amended 2026-01-15):
+- **Security**: Non-sequential IDs prevent enumeration attacks
+- **Distributed Systems**: UUIDs enable conflict-free merging across multiple databases (critical for Phase V)
+- **Scalability**: No central ID generation bottleneck
+- **Modern Best Practice**: Industry standard for cloud-native applications
+- **Future-Proof**: Supports horizontal scaling and multi-region deployments
+
+**Field Naming** (amended 2026-01-15):
+- `is_complete` preferred over `completed` for boolean clarity (follows `is_*` convention)
+- Aligns with SQLModel/Pydantic naming patterns
+- More explicit and self-documenting in code
 
 ---
 
@@ -304,4 +327,13 @@ Constitution > Specify > Plan > Tasks
 - All implementations must verify compliance
 - Complexity must be justified against YAGNI
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-29
+**Version**: 1.1.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2026-01-15
+
+## Amendment History
+
+### v1.1.0 (2026-01-15)
+- **Changed**: Database schema to use UUID primary keys instead of integer
+- **Changed**: Task completion field from `completed` to `is_complete`
+- **Added**: Schema Design Rationale section documenting UUID and naming decisions
+- **Rationale**: Align with modern cloud-native best practices, support Phase V distributed systems, improve security through non-sequential IDs
+- **Impact**: All phases (II-V) benefit from UUID adoption
