@@ -107,7 +107,7 @@ class TestFormatting:
             created_at=datetime(2025, 12, 29, 10, 30, 0),
         )
         result = format_task(task)
-        assert "[ ] 1. Buy groceries" in result
+        assert "[PENDING] 1. Buy groceries" in result
         assert "Description: Milk, eggs" in result
         assert "Created: 2025-12-29 10:30:00" in result
 
@@ -120,7 +120,7 @@ class TestFormatting:
             created_at=datetime(2025, 12, 29, 10, 30, 0),
         )
         result = format_task(task)
-        assert "[x] 1. Buy groceries" in result
+        assert "[DONE] 1. Buy groceries" in result
 
     def test_format_task_without_description(self):
         """Test formatting a task without description."""
@@ -166,7 +166,7 @@ class TestFormatting:
     def test_format_error(self):
         """Test error message formatting."""
         result = format_error("Something went wrong")
-        assert "[ERROR] Something went wrong" == result
+        assert "[ERR] Something went wrong" == result
 
 
 class TestHandleCommand:

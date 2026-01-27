@@ -6,6 +6,13 @@ import sys
 from .exceptions import TodoError
 from .manager import TaskManager
 from .models import Task
+from .ui import (
+    format_success,
+    format_error,
+    format_command_icon,
+    format_task_status,
+    show_loading_dots,
+)
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -54,9 +61,9 @@ def create_parser() -> argparse.ArgumentParser:
 
 def format_task(task: Task) -> str:
     """Format a single task for display."""
-    status = "[x]" if task.completed else "[ ]"
+    status_icon = format_task_status(task.completed)
     lines = [
-        f"{status} {task.id}. {task.title}",
+        f"{status_icon} {task.id}. {task.title}",
     ]
     if task.description:
         lines.append(f"    Description: {task.description}")
@@ -83,18 +90,10 @@ def format_task_list(tasks: list[Task], title: str = "Task List") -> str:
     return "\n".join(lines)
 
 
-def format_success(message: str) -> str:
-    """Format a success message."""
-    return f"[OK] {message}"
-
-
-def format_error(message: str) -> str:
-    """Format an error message."""
-    return f"[ERROR] {message}"
-
-
 def handle_add(args, manager: TaskManager) -> None:
     """Handle the add command."""
+    icon = format_command_icon("add")
+    show_loading_dots(f"{icon} Adding task")
     try:
         task = manager.add_task(args.title, args.desc)
         print(format_success(f"Task added: [{task.id}] {task.title}"))
@@ -120,6 +119,8 @@ def handle_list(args, manager: TaskManager) -> None:
 
 def handle_complete(args, manager: TaskManager) -> None:
     """Handle the complete command."""
+    icon = format_command_icon("complete")
+    show_loading_dots(f"{icon} Updating task status")
     try:
         task = manager.toggle_complete(args.task_id)
         status = "completed" if task.completed else "pending"
@@ -131,6 +132,8 @@ def handle_complete(args, manager: TaskManager) -> None:
 
 def handle_update(args, manager: TaskManager) -> None:
     """Handle the update command."""
+    icon = format_command_icon("update")
+    show_loading_dots(f"{icon} Updating task")
     try:
         task = manager.update_task(args.task_id, args.title, args.desc)
         print(format_success(f"Task [{task.id}] updated"))
@@ -141,6 +144,8 @@ def handle_update(args, manager: TaskManager) -> None:
 
 def handle_delete(args, manager: TaskManager) -> None:
     """Handle the delete command."""
+    icon = format_command_icon("delete")
+    show_loading_dots(f"{icon} Deleting task")
     try:
         manager.delete_task(args.task_id)
         print(format_success(f"Task [{args.task_id}] deleted"))
