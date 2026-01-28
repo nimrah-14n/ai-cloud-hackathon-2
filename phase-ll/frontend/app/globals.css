@@ -4,21 +4,21 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 15, 10, 40;
-  --background-end-rgb: 10, 5, 30;
+  --background-start-rgb: 25, 10, 55;
+  --background-end-rgb: 18, 5, 45;
 }
 
 .dark {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 12, 8, 35;
-  --background-end-rgb: 8, 4, 25;
+  --background-start-rgb: 22, 8, 50;
+  --background-end-rgb: 15, 4, 40;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 15, 10, 40;
-    --background-end-rgb: 10, 5, 30;
+    --background-start-rgb: 25, 10, 55;
+    --background-end-rgb: 18, 5, 45;
   }
 }
 
